@@ -2,8 +2,10 @@ package wtf.traumadev.berylliumtestmod.selftest
 
 import com.google.gson.GsonBuilder
 import net.minecraft.client.Minecraft
+import net.minecraft.client.NarratorStatus
 import net.minecraft.client.Screenshot
 import net.minecraft.client.gui.screens.TitleScreen
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.Difficulty
 import net.minecraft.world.level.GameType
 import net.minecraft.world.level.LevelSettings
@@ -145,6 +147,12 @@ object Selftest {
 	}
 
 	private fun tickBoot() {
+		if (stateTicks == 1) {
+			val minecraft = Minecraft.getInstance()
+			minecraft.options.getSoundSourceOptionInstance(SoundSource.MASTER).set(0.0)
+			minecraft.options.narrator().set(NarratorStatus.OFF)
+			minecraft.getSoundManager().stop()
+		}
 		val gui = Minecraft.getInstance().gui
 		if (gui.overlay() != null) {
 			if (stateTicks > BOOT_TIMEOUT_TICKS) abort("game never finished loading")

@@ -15,7 +15,7 @@ From IntelliJ, the **Run SelfTest** run configuration (`.idea/runConfigurations/
 The `selftest` Loom run configuration (see `beryllium-test-mod/build.gradle.kts`) launches the client in its own `run-selftest/` game directory at 1280x720 with `-Dberyllium.selftest=true`. The root `build.gradle.kts` disables `ideConfigGenerated` for every Loom run, so Gradle sync never writes or rewrites `.idea/runConfigurations` entries and the project-level run configurations above stay authoritative. In selftest mode the default `DemoHud` open is skipped and no keys are injected, so the demo keybinds (Insert/Home) never fire; `DemoHud` is fully controlled by the harness (`tickPrepare` closes it; the `hud` scenario opens and closes it itself). The harness then, without any user input:
 
 1. Waits for the loading overlay to clear, then forces the title screen — any other screen (such as first-launch onboarding) is cleared first.
-2. Forces a deterministic environment: gui scale 2, `pauseOnLostFocus` off.
+2. Forces a deterministic environment: gui scale 2, `pauseOnLostFocus` off. Audio is muted on the harness's first client tick, before music can start: master volume 0 (which zeroes every sound category), narrator off, and the sound manager stopped — a selftest run never makes noise.
 3. Deletes and re-creates the world `beryllium-selftest` (fixed seed, creative, peaceful, cheats on) via `WorldOpenFlows.createFreshLevel`, and joins it.
 4. Freezes the environment: `advance_time`/`advance_weather`/`spawn_mobs`/`fall_damage` off, time 6000, clear weather, night vision, zero gravity, quiet command feedback.
 5. Runs each scenario: set up state, draw through the real frame/world events, capture the frame, assert pixels.
