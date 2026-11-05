@@ -1,3 +1,5 @@
+[<img src="../src/main/resources/assets/beryllium/icon.svg" width="48" height="48" alt="Beryllium element tile without a ground shadow">](../README.md)
+
 # Renderer
 
 Beryllium's renderer is a backend-agnostic immediate-mode drawing layer built on Blaze3D's `GpuDevice` / `CommandEncoder` / `RenderPass` abstraction (the `com.mojang.renderpearl.api` interfaces in 26.3). It contains zero direct GL calls, so it runs identically on the OpenGL and Vulkan backends (whichever the game's `preferredGraphicsBackend` setting selects). Everything below describes the code under `render/`.

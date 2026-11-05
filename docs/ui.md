@@ -1,3 +1,5 @@
+[<img src="../src/main/resources/assets/beryllium/icon.svg" width="48" height="48" alt="Beryllium element tile without a ground shadow">](../README.md)
+
 # UI
 
 Beryllium's UI framework is a retained-mode view tree drawn by the custom renderer. It has two host flavors: screen-backed UIs are hosted in a vanilla `Screen` by the internal `UiScreen` and receive input through its callbacks, while HUDs are vanilla-independent — drawn below every vanilla GUI layer and fed by the global mouse/keyboard events. Everything below describes the code under `ui/`.

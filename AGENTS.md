@@ -2,6 +2,9 @@
 
 Beryllium is a **renderer and UI API** for Fabric mods on Minecraft 26.3, targeting the 26.3 renderpearl API.
 
+The project logo source is `src/main/resources/assets/beryllium/icon.svg`; the README displays it above the centered project title. Keep `icon.png` in the same directory as a 512×512 raster of that SVG for the existing Fabric mod icon declaration.
+The rounded element tile places `Be` at the upper left, `4` above `9.012` at the upper right, and a silver metal specimen in the center without a ground shadow. Lettering is outlined from the bundled Inter fonts so SVG and PNG rendering do not depend on installed fonts.
+
 ## Tech Stack
 
 - **Language:** Kotlin 2.4.21 (JVM target 25)

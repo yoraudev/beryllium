@@ -1,3 +1,5 @@
+[<img src="../src/main/resources/assets/beryllium/icon.svg" width="48" height="48" alt="Beryllium element tile without a ground shadow">](../README.md)
+
 # 26.3 API notes
 
 Differences encountered while porting Beryllium to Minecraft 26.3 that affect every mod built against it.

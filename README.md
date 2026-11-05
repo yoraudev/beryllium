@@ -1,4 +1,8 @@
-# Beryllium
+<p align="center">
+  <img src="src/main/resources/assets/beryllium/icon.svg" width="128" height="128" alt="Beryllium element tile: Be, 4, 9.012 and a silver metal specimen without a ground shadow">
+</p>
+
+<h1 align="center">Beryllium</h1>
 
 Beryllium is a client-side renderer and UI API for Fabric mods on Minecraft 26.3. It provides an immediate-mode 2D/3D drawing layer, MSDF text, SVG images, a retained-mode UI framework, anchored HUD overlays, and a small synchronous event bus.
 

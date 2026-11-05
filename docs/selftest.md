@@ -1,3 +1,5 @@
+[<img src="../src/main/resources/assets/beryllium/icon.svg" width="48" height="48" alt="Beryllium element tile without a ground shadow">](../README.md)
+
 # Selftest
 
 The dev-only end-to-end test harness is a separate Gradle subproject, `beryllium-test-mod/`, kept in `beryllium-test-mod/src/main/kotlin/wtf/traumadev/berylliumtestmod/selftest/`. It is **not** part of the API and is never packaged into the beryllium jar: it never activates in a normal game run and exists so the renderer and UI stack can be verified automatically on a real client.
