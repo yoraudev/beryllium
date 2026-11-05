@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "wtf.traumadev.beryllium.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"minVersion": "0.8",
+	"client": [
+		"GameRendererMixin",
+		"LevelRendererMixin",
+		"MouseHandlerMixin",
+		"KeyboardHandlerMixin",
+		"MinecraftMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

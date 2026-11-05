@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "${modId}",
+	"version": "${modVersion}",
+	"name": "${modName}",
+	"description": "Development harness for Beryllium: demo entities and the end-to-end selftest runner. Never shipped to users.",
+	"environment": "client",
+	"license": "LicenseRef-Beryllium",
+	"entrypoints": {
+		"client": [
+			{
+				"value": "wtf.traumadev.berylliumtestmod.BerylliumTestMod",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-language-kotlin": "*",
+		"beryllium": "*"
+	}
+}

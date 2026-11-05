@@ -1,0 +1,13 @@
+* text=auto
+
+/gradlew        text eol=lf
+*.bat           text eol=crlf
+
+*.jar           binary
+*.class         binary
+*.png           binary
+*.ttf           binary
+*.otf           binary
+*.dll           binary
+*.so            binary
+*.dylib         binary
