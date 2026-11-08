@@ -5,11 +5,9 @@ on:
     branches: [main]
     paths:
       - "src/**"
-      - "beryllium-renderer/**"
-      - "native/**"
-      - "build.gradle.kts"
-      - "settings.gradle.kts"
-      - "gradle.properties"
+      - "native/src/**"
+      - "native/Cargo.toml"
+      - "native/Cargo.lock"
   workflow_dispatch:
 
 permissions:
