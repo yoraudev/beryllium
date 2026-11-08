@@ -10,7 +10,7 @@ Beryllium is a **renderer and UI API** for Fabric mods on Minecraft 26.3, target
 - **Libraries:** Fabric API 0.165.0+26.3, Fabric Language Kotlin 1.14.2+kotlin.2.4.21, jsvg 2.2.0 (jar-in-jar)
 - **Build:** Gradle 9.8.2 with Fabric Loom 1.19-SNAPSHOT (`build.gradle.kts`, Kotlin DSL)
 - **Java Compatibility:** Java 25 (source/target), JVM target 25
-- **Native:** Rust cdylib `beryllium_native` (font rasterization), built by `buildNativeFont` when cargo is available
+- **Native:** Rust cdylib `beryllium_native` (font rasterization), built by `buildNativeFont` when cargo is available; releases build windows-x86_64, linux-x86_64, macos-x86_64 and macos-aarch64 and merge all four into both jars
 
 ## Reference
 
@@ -31,7 +31,7 @@ Decompiled Minecraft 26.3 sources (Vineflower, via `genSourcesWithVineflower`) i
 - Hand-written (non auto-generated) files must never contain comments. If any are found, remove them.
 - Commits must follow the Conventional Commits specification; messages are always in English.
 - Commit and push to the `dev` branch. `main` is protected and changes only through pull requests from `dev`; never push to `main` directly. Merging `dev` into `main` never deletes `dev`.
-- Releases are published automatically from `main`: a push that changes the shipped sources runs `.github/workflows/release.yml`, which derives the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and publishes them as a GitHub release. Changes limited to documentation, the test mod, or CI do not publish a release.
+- Releases are published automatically from `main`: a push that changes the shipped sources runs `.github/workflows/release.yml`, which derives the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and publishes them as a GitHub release. The native library is built on Windows, Linux and both macOS architectures and merged into both jars through `-Pnative_resources_dir`. Changes limited to documentation, the test mod, or CI do not publish a release.
 - Do not build the project unless it is genuinely necessary.
 - Never launch an interactive client (`runClient`, or any Loom/IDE run that stays open waiting for input). The only client the agent may run is `runSelftest`, which drives itself end-to-end and exits. Interactive runs belong to the human; do not synthesize key/mouse input against the real desktop to drive them.
 - Keep everything that must never ship in the API jar — the selftest harness and the demo entities `DemoHud`/`DemoUi` — inside the standalone `beryllium-test-mod/` subproject (mod id `berylliumtestmod`), which depends on the root project through `implementation(project(":"))` and therefore consumes Beryllium exactly like an embedding mod.
