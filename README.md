@@ -300,7 +300,7 @@ Custom pipelines from `RenderPipelines` join the same batching path. `Renderer2D
 
 Textures are created with `Texture2D.create(label, width, height)`. Colors are ARGB integers; `Colors` provides `rgb`, `rgba`, `withAlpha`, `multiplyAlpha`, `lerp`, and `hex`.
 
-Text is rasterized by the Rust native library as MSDF at a 64 px em with a 2 px range. The build bundles the native library for the build platform and compiles it automatically when `cargo` is available. If the native library is missing, text rendering is disabled with an error log; there is intentionally no software fallback.
+Text is rasterized by the Rust native library as MSDF at a 64 px em with a 2 px range. Local builds bundle the native library for the build platform and compile it automatically when `cargo` is available; releases bundle the Windows, Linux and both macOS builds. If the native library is missing, text rendering is disabled with an error log; there is intentionally no software fallback.
 
 ## UI model
 
@@ -377,7 +377,7 @@ The selftest harness is never packaged into the Beryllium API jar. It compiles o
 
 Work is committed and pushed to the `dev` branch. `main` is protected: it only changes through pull requests from `dev`, and merging a pull request never deletes `dev`.
 
-A merge into `main` that changes shipped sources publishes a release automatically. The release workflow takes the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and attaches `beryllium-<version>.jar` and `beryllium-renderer-<version>.jar` to the GitHub release. Changes limited to documentation, the test mod, or CI do not publish a release.
+A merge into `main` that changes shipped sources publishes a release automatically. The release workflow takes the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and attaches `beryllium-<version>.jar` and `beryllium-renderer-<version>.jar` to the GitHub release. The native library is cross-compiled on the Linux release runner for Windows, Linux and both macOS architectures and merged into both jars. Changes limited to documentation, the test mod, or CI do not publish a release.
 
 ## Documentation
 

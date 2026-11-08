@@ -19,12 +19,18 @@ dependencies {
 	include("com.github.weisj:jsvg:$jsvg")
 }
 
+val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { rootProject.file(it) }
+
 sourceSets.main {
 	kotlin.srcDir(rootProject.file("src/main/kotlin"))
 	kotlin.exclude("wtf/traumadev/beryllium/ui/**")
 	kotlin.srcDir(rootProject.layout.buildDirectory.dir("generated/sources/modConstants"))
 	java.srcDir(rootProject.file("src/main/java"))
-	resources.srcDir(rootProject.layout.buildDirectory.dir("generated/native-resources"))
+	if (nativeResourcesOverride != null) {
+		resources.srcDir(nativeResourcesOverride)
+	} else {
+		resources.srcDir(rootProject.layout.buildDirectory.dir("generated/native-resources"))
+	}
 }
 
 tasks.named("compileKotlin") {
@@ -32,7 +38,9 @@ tasks.named("compileKotlin") {
 }
 
 tasks.processResources {
-	dependsOn(":copyNativeFont")
+	if (nativeResourcesOverride == null) {
+		dependsOn(":copyNativeFont")
+	}
 	from(rootProject.file("src/main/resources")) {
 		exclude("fabric.mod.json")
 	}
