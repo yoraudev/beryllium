@@ -17,3 +17,4 @@ pluginManagement {
 rootProject.name = "beryllium"
 
 include("beryllium-test-mod")
+include("beryllium-renderer")

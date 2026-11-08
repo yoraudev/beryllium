@@ -2,7 +2,7 @@
 
 # UI
 
-Beryllium's UI framework is a retained-mode view tree drawn by the custom renderer. It has two host flavors: screen-backed UIs are hosted in a vanilla `Screen` by the internal `UiScreen` and receive input through its callbacks, while HUDs are vanilla-independent — drawn below every vanilla GUI layer and fed by the global mouse/keyboard events. Everything below describes the code under `ui/`.
+Beryllium's UI framework is a retained-mode view tree drawn by the custom renderer. It has two host flavors: screen-backed UIs are hosted in a vanilla `Screen` by the internal `UiScreen` and receive input through its callbacks, while HUDs are vanilla-independent — drawn below every vanilla GUI layer and fed by the global mouse/keyboard events. Everything below describes the code under `ui/`, which ships only in the full `beryllium` artifact; the renderer-only `beryllium-renderer` artifact omits the package and its `UiCore` entrypoint.
 
 ## Architecture
 

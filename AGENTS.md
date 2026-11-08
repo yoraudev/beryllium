@@ -2,9 +2,6 @@
 
 Beryllium is a **renderer and UI API** for Fabric mods on Minecraft 26.3, targeting the 26.3 renderpearl API.
 
-The project logo source is `src/main/resources/assets/beryllium/icon.svg`; the README displays it above the centered project title. Keep `icon.png` in the same directory as a 512×512 raster of that SVG for the existing Fabric mod icon declaration.
-The rounded element tile places `Be` at the upper left, `4` above `9.012` at the upper right, and a silver metal specimen in the center without a ground shadow. Lettering is outlined from the bundled Inter fonts so SVG and PNG rendering do not depend on installed fonts.
-
 ## Tech Stack
 
 - **Language:** Kotlin 2.4.21 (JVM target 25)
@@ -36,6 +33,7 @@ Decompiled Minecraft 26.3 sources (Vineflower, via `genSourcesWithVineflower`) i
 - Do not build the project unless it is genuinely necessary.
 - Never launch an interactive client (`runClient`, or any Loom/IDE run that stays open waiting for input). The only client the agent may run is `runSelftest`, which drives itself end-to-end and exits. Interactive runs belong to the human; do not synthesize key/mouse input against the real desktop to drive them.
 - Keep everything that must never ship in the API jar — the selftest harness and the demo entities `DemoHud`/`DemoUi` — inside the standalone `beryllium-test-mod/` subproject (mod id `berylliumtestmod`), which depends on the root project through `implementation(project(":"))` and therefore consumes Beryllium exactly like an embedding mod.
+- Ship two user-facing artifacts from the same sources: the root `beryllium` jar with renderer and UI, and the `beryllium-renderer` subproject jar with renderer, text, SVG, texture, pipeline and event layers only. Both declare mod id `beryllium`. Keep `Core` renderer-only and UI initialization in `wtf.traumadev.beryllium.ui.UiCore`; renderer sources must never import `wtf.traumadev.beryllium.ui`.
 - Keep implementation plumbing Kotlin `internal` — GPU pipelines and compiled objects, buffers, samplers, font atlases, native binding, prewarm, hosts, mixin hooks — so nothing outside the root module can reach it; embedders and the test mod must compile against the public surface only, including `Renderer.ready` and its parts `Renderer.fontPrewarmComplete` / `Renderer.pipelinesReady`.
 - When a task is given, read in full the files listed under `Docs` above.
 - Whenever the project changes, update every Markdown file in the project (not only those under `docs/`) to reflect what was added, changed, or removed.

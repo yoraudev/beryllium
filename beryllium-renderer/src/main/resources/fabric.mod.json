@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "${modId}",
+	"version": "${modVersion}",
+	"name": "${modName}",
+	"description": "Renderer-only build of Beryllium: 2D/3D drawing, MSDF text, SVG, textures, pipelines, and events without the UI framework.",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+	},
+	"license": "LicenseRef-Beryllium",
+	"icon": "assets/beryllium/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			{
+				"value": "wtf.traumadev.beryllium.Core",
+				"adapter": "kotlin"
+			}
+		],
+		"client": [
+			{
+				"value": "wtf.traumadev.beryllium.Core",
+				"adapter": "kotlin"
+			}
+		]
+	},
+	"mixins": [
+		"beryllium.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*",
+		"fabric-language-kotlin": "*"
+	}
+}

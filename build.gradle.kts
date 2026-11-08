@@ -59,6 +59,20 @@ tasks.register("runSelftest") {
 	dependsOn(":beryllium-test-mod:runSelftest")
 }
 
+val copyRendererJar = tasks.register<Copy>("copyRendererJar") {
+	group = "build"
+	description = "Copies the renderer-only artifact into build/libs next to the full artifact."
+	dependsOn(":beryllium-renderer:build")
+	from(project(":beryllium-renderer").layout.buildDirectory.dir("libs")) {
+		include("beryllium-renderer-*.jar")
+	}
+	into(layout.buildDirectory.dir("libs"))
+}
+
+tasks.named("build") {
+	dependsOn(copyRendererJar)
+}
+
 val nativeDir = file("native")
 val nativeLibName = when {
 	org.gradle.internal.os.OperatingSystem.current().isWindows -> "beryllium_native.dll"

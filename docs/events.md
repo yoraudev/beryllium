@@ -2,7 +2,7 @@
 
 # Events
 
-Beryllium's public hook surface is a synchronous event bus. The client entrypoint (`wtf.traumadev.beryllium.Core`, declared in `fabric.mod.json` for both `main` and `client`) calls `Renderer.initialize()`, `HudManager.init()` and `UiPrewarm.initialize()` from `onInitializeClient()`, so embedders never have to start anything — subscribing is enough. All events are posted from the client thread by the mixins in `wtf.traumadev.beryllium.mixin` (`GameRendererMixin`, `LevelRendererMixin`, `MouseHandlerMixin`, `KeyboardHandlerMixin`, `MinecraftMixin`).
+Beryllium's public hook surface is a synchronous event bus. The full artifact declares two client entrypoints in `fabric.mod.json`: `wtf.traumadev.beryllium.Core` calls `Renderer.initialize()`, and `wtf.traumadev.beryllium.ui.UiCore` calls `HudManager.init()` and `UiPrewarm.initialize()` from `onInitializeClient()`. The renderer-only artifact declares only `Core`, so embedders never have to start the layers they ship — subscribing is enough. All events are posted from the client thread by the mixins in `wtf.traumadev.beryllium.mixin` (`GameRendererMixin`, `LevelRendererMixin`, `MouseHandlerMixin`, `KeyboardHandlerMixin`, `MinecraftMixin`).
 
 ## Subscribing
 

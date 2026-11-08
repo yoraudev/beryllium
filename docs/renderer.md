@@ -2,7 +2,7 @@
 
 # Renderer
 
-Beryllium's renderer is a backend-agnostic immediate-mode drawing layer built on Blaze3D's `GpuDevice` / `CommandEncoder` / `RenderPass` abstraction (the `com.mojang.renderpearl.api` interfaces in 26.3). It contains zero direct GL calls, so it runs identically on the OpenGL and Vulkan backends (whichever the game's `preferredGraphicsBackend` setting selects). Everything below describes the code under `render/`.
+Beryllium's renderer is a backend-agnostic immediate-mode drawing layer built on Blaze3D's `GpuDevice` / `CommandEncoder` / `RenderPass` abstraction (the `com.mojang.renderpearl.api` interfaces in 26.3). It contains zero direct GL calls, so it runs identically on the OpenGL and Vulkan backends (whichever the game's `preferredGraphicsBackend` setting selects). Everything below describes the code under `render/`, which is also shipped on its own as the renderer-only `beryllium-renderer` artifact (the full artifact adds the `ui/` layer).
 
 ## Frame integration
 
