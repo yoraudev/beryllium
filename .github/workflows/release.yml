@@ -19,45 +19,8 @@ concurrency:
   group: release
   cancel-in-progress: false
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
-  natives:
-    if: github.ref == 'refs/heads/main'
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - runner: windows-2025
-            tag: windows-x86_64
-            library: beryllium_native.dll
-          - runner: ubuntu-24.04
-            tag: linux-x86_64
-            library: libberyllium_native.so
-          - runner: macos-15-intel
-            tag: macos-x86_64
-            library: libberyllium_native.dylib
-          - runner: macos-15
-            tag: macos-aarch64
-            library: libberyllium_native.dylib
-    runs-on: ${{ matrix.runner }}
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v6
-      - name: build native library
-        working-directory: native
-        run: cargo build --release
-      - name: upload native library
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ matrix.tag }}
-          path: native/target/release/${{ matrix.library }}
-          if-no-files-found: error
-
   release:
-    needs: natives
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     steps:
@@ -70,10 +33,21 @@ jobs:
         with:
           java-version: '25'
           distribution: 'microsoft'
-      - name: download native libraries
-        uses: actions/download-artifact@v7
-        with:
-          path: prebuilt/natives
+      - name: build native libraries
+        run: |
+          docker run --rm -e MACOSX_DEPLOYMENT_TARGET=11.0 -v "$PWD":/io -w /io/native messense/cargo-zigbuild:0.24.1 sh -c '
+            cargo zigbuild --release --target x86_64-unknown-linux-gnu.2.17 &&
+            cargo zigbuild --release --target x86_64-pc-windows-gnu &&
+            cargo zigbuild --release --target x86_64-apple-darwin &&
+            cargo zigbuild --release --target aarch64-apple-darwin
+          '
+          sudo chown -R "$(id -u):$(id -g)" native/target
+          mkdir -p prebuilt/natives/linux-x86_64 prebuilt/natives/windows-x86_64 prebuilt/natives/macos-x86_64 prebuilt/natives/macos-aarch64
+          cp native/target/x86_64-unknown-linux-gnu/release/libberyllium_native.so prebuilt/natives/linux-x86_64/
+          cp native/target/x86_64-pc-windows-gnu/release/beryllium_native.dll prebuilt/natives/windows-x86_64/
+          cp native/target/x86_64-apple-darwin/release/libberyllium_native.dylib prebuilt/natives/macos-x86_64/
+          cp native/target/aarch64-apple-darwin/release/libberyllium_native.dylib prebuilt/natives/macos-aarch64/
+          ls -R prebuilt/natives
       - name: compute version
         id: version
         run: |
