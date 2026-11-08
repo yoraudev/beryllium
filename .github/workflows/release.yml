@@ -19,13 +19,47 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  release:
+  natives:
     if: github.ref == 'refs/heads/main'
-    runs-on: windows-2025
-    defaults:
-      run:
-        shell: bash
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            tag: windows-x86_64
+            library: beryllium_native.dll
+          - runner: ubuntu-24.04
+            tag: linux-x86_64
+            library: libberyllium_native.so
+          - runner: macos-15-intel
+            tag: macos-x86_64
+            library: libberyllium_native.dylib
+          - runner: macos-15
+            tag: macos-aarch64
+            library: libberyllium_native.dylib
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: build native library
+        working-directory: native
+        run: cargo build --release
+      - name: upload native library
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.tag }}
+          path: native/target/release/${{ matrix.library }}
+          if-no-files-found: error
+
+  release:
+    needs: natives
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
@@ -36,6 +70,10 @@ jobs:
         with:
           java-version: '25'
           distribution: 'microsoft'
+      - name: download native libraries
+        uses: actions/download-artifact@v7
+        with:
+          path: prebuilt/natives
       - name: compute version
         id: version
         run: |
@@ -47,7 +85,7 @@ jobs:
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
       - name: build
-        run: ./gradlew build -Pmod_version="$VERSION"
+        run: ./gradlew build -Pmod_version="$VERSION" -Pnative_resources_dir=prebuilt
         env:
           VERSION: ${{ steps.version.outputs.version }}
       - name: publish release
