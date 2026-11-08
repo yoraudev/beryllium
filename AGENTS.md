@@ -30,6 +30,8 @@ Decompiled Minecraft 26.3 sources (Vineflower, via `genSourcesWithVineflower`) i
 - Everything written in this project must be in English.
 - Hand-written (non auto-generated) files must never contain comments. If any are found, remove them.
 - Commits must follow the Conventional Commits specification; messages are always in English.
+- Commit and push to the `dev` branch. `main` is protected and changes only through pull requests from `dev`; never push to `main` directly. Merging `dev` into `main` never deletes `dev`.
+- Releases are published automatically from `main`: a push that changes the shipped sources runs `.github/workflows/release.yml`, which derives the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and publishes them as a GitHub release. Changes limited to documentation, the test mod, or CI do not publish a release.
 - Do not build the project unless it is genuinely necessary.
 - Never launch an interactive client (`runClient`, or any Loom/IDE run that stays open waiting for input). The only client the agent may run is `runSelftest`, which drives itself end-to-end and exits. Interactive runs belong to the human; do not synthesize key/mouse input against the real desktop to drive them.
 - Keep everything that must never ship in the API jar — the selftest harness and the demo entities `DemoHud`/`DemoUi` — inside the standalone `beryllium-test-mod/` subproject (mod id `berylliumtestmod`), which depends on the root project through `implementation(project(":"))` and therefore consumes Beryllium exactly like an embedding mod.

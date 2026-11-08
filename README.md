@@ -41,7 +41,7 @@ Beryllium is a client-only mod and is not intended for dedicated servers.
 
 ## Installation
 
-Build the project and place the jar for the API surface you need in the game's `mods` directory together with Fabric API and Fabric Language Kotlin:
+Download a release from the [Releases](https://github.com/yoraudev/beryllium/releases) page, or build the project, and place the jar for the API surface you need in the game's `mods` directory together with Fabric API and Fabric Language Kotlin:
 
 ```
 gradlew build
@@ -371,6 +371,12 @@ Rendering is device-gated. Check these properties before depending on the render
 Use the `Run SelfTest` IDE configuration for the same task. For an interactive development client with the demo entities loaded, use the `Run TestMod` configuration in the `beryllium-test-mod` subproject.
 
 The selftest harness is never packaged into the Beryllium API jar. It compiles only against the public API, which keeps the boundary between the library and embedding mods honest.
+
+## Git workflow
+
+Work is committed and pushed to the `dev` branch. `main` is protected: it only changes through pull requests from `dev`, and merging a pull request never deletes `dev`.
+
+A merge into `main` that changes shipped sources publishes a release automatically. The release workflow takes the next `v<major>.<minor>.<patch>` tag from `mod_version` in `gradle.properties` and the tags already present, builds both jars, and attaches `beryllium-<version>.jar` and `beryllium-renderer-<version>.jar` to the GitHub release. Changes limited to documentation, the test mod, or CI do not publish a release.
 
 ## Documentation
 
