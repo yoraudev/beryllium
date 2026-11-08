@@ -108,16 +108,26 @@ val copyNativeFont = tasks.register<Copy>("copyNativeFont") {
 	into(layout.buildDirectory.dir("generated/native-resources/natives/$nativeTag"))
 }
 
+val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { file(it) }
+
 sourceSets.main {
-	resources.srcDir(layout.buildDirectory.dir("generated/native-resources"))
+	if (nativeResourcesOverride != null) {
+		resources.srcDir(nativeResourcesOverride)
+	} else {
+		resources.srcDir(layout.buildDirectory.dir("generated/native-resources"))
+	}
 }
 
-listOf("jar", "sourcesJar").forEach { name ->
-	tasks.matching { it.name == name }.configureEach { dependsOn(copyNativeFont) }
+if (nativeResourcesOverride == null) {
+	listOf("jar", "sourcesJar").forEach { name ->
+		tasks.matching { it.name == name }.configureEach { dependsOn(copyNativeFont) }
+	}
 }
 
 tasks.processResources {
-	dependsOn(copyNativeFont)
+	if (nativeResourcesOverride == null) {
+		dependsOn(copyNativeFont)
+	}
 	val expansionProps = mapOf(
 		"modId" to modId,
 		"modName" to modName,
