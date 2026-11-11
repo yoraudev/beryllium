@@ -10,7 +10,7 @@ Beryllium is a **renderer and UI API** for Fabric mods on Minecraft 26.3, target
 - **Libraries:** Fabric API 0.165.0+26.3, Fabric Language Kotlin 1.14.2+kotlin.2.4.21, jsvg 2.2.0 (jar-in-jar)
 - **Build:** Gradle 9.8.2 with Fabric Loom 1.19-SNAPSHOT (`build.gradle.kts`, Kotlin DSL)
 - **Java Compatibility:** Java 25 (source/target), JVM target 25
-- **Native:** Rust cdylib `beryllium_native` (font rasterization), built by `buildNativeFont` when cargo is available; releases cross-compile windows-x86_64, linux-x86_64, macos-x86_64 and macos-aarch64 on the Linux runner and merge all four into both jars
+- **Native:** Rust cdylib `beryllium_native` (font rasterization), built by `buildNativeFont` when cargo is available; a `prebuilt/` directory in the release layout (`prebuilt/natives/<tag>/`) is used instead when present; releases cross-compile windows-x86_64, linux-x86_64, macos-x86_64 and macos-aarch64 on the Linux runner and merge all four into both jars
 
 ## Reference
 

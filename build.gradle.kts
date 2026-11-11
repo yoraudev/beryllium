@@ -108,7 +108,7 @@ val copyNativeFont = tasks.register<Copy>("copyNativeFont") {
 	into(layout.buildDirectory.dir("generated/native-resources/natives/$nativeTag"))
 }
 
-val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { file(it) }
+val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { file(it) } ?: file("prebuilt").takeIf { it.isDirectory }
 
 sourceSets.main {
 	if (nativeResourcesOverride != null) {
