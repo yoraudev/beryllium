@@ -6,7 +6,6 @@ decompiled-source/
 run/
 run-selftest/
 logs/
-prebuilt/
 
 .idea/
 *.iml

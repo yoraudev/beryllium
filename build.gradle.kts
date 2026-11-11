@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.gradle.api.tasks.Exec
 
 plugins {
 	id("net.fabricmc.fabric-loom")
@@ -74,60 +75,78 @@ tasks.named("build") {
 }
 
 val nativeDir = file("native")
-val nativeLibName = when {
-	org.gradle.internal.os.OperatingSystem.current().isWindows -> "beryllium_native.dll"
-	org.gradle.internal.os.OperatingSystem.current().isMacOsX -> "libberyllium_native.dylib"
-	else -> "libberyllium_native.so"
-}
-val nativeTag = when {
-	org.gradle.internal.os.OperatingSystem.current().isWindows -> "windows-x86_64"
-	org.gradle.internal.os.OperatingSystem.current().isMacOsX -> "macos-x86_64"
-	else -> "linux-x86_64"
-}
-val nativeLibFile = nativeDir.resolve("target/release/$nativeLibName")
+val nativeResourcesDir = layout.buildDirectory.dir("generated/native-resources")
 
-val buildNativeFont = tasks.register<Exec>("buildNativeFont") {
-	workingDir = nativeDir
-	commandLine("cargo", "build", "--release")
-	inputs.dir(nativeDir.resolve("src"))
-	inputs.file(nativeDir.resolve("Cargo.toml"))
-	inputs.file(nativeDir.resolve("Cargo.lock"))
-	outputs.file(nativeLibFile)
-	onlyIf {
-		try {
-			ProcessBuilder("cargo", "--version").start().waitFor() == 0
-		} catch (e: Exception) {
-			false
+val nativeTargets = listOf(
+	Triple("x86_64-unknown-linux-gnu.2.17", "linux-x86_64", "libberyllium_native.so"),
+	Triple("x86_64-pc-windows-gnu", "windows-x86_64", "beryllium_native.dll"),
+	Triple("x86_64-apple-darwin", "macos-x86_64", "libberyllium_native.dylib"),
+	Triple("aarch64-apple-darwin", "macos-aarch64", "libberyllium_native.dylib"),
+)
+
+val buildNativeTargets = nativeTargets.map { (target, tag, libName) ->
+	val cargoCommand = listOf("cargo", "zigbuild", "--release", "--target", target)
+	val cargoTargetDir = target.substringBefore(".2.17")
+	val nativeSrcDir = nativeDir.resolve("src")
+	val cargoTomlFile = nativeDir.resolve("Cargo.toml")
+	val cargoLockFile = nativeDir.resolve("Cargo.lock")
+	val libSourceFile = nativeDir.resolve("target/$cargoTargetDir/release/$libName")
+	val buildNativeTarget = tasks.register<Exec>("buildNativeFont${tag.replace("-x86_64", "-x64")}") {
+		group = "build"
+		description = "Cross-compiles the native font library for $tag."
+		workingDir = nativeDir
+		commandLine = cargoCommand
+		environment("MACOSX_DEPLOYMENT_TARGET", "11.0")
+		inputs.dir(nativeSrcDir)
+		inputs.file(cargoTomlFile)
+		inputs.file(cargoLockFile)
+		outputs.file(libSourceFile)
+		onlyIf {
+			try {
+				ProcessBuilder("cargo", "--version").start().waitFor() == 0 && ProcessBuilder("zig", "version").start().waitFor() == 0
+			} catch (e: Exception) {
+				false
+			}
 		}
 	}
+	val copyNativeTarget = tasks.register<Copy>("copyNativeFont$tag") {
+		group = "build"
+		description = "Copies the $tag native font library into the generated resources."
+		dependsOn(buildNativeTarget)
+		from(libSourceFile)
+		rename { libName }
+		into(nativeResourcesDir.map { it.dir("natives/$tag") })
+	}
+	copyNativeTarget
 }
 
-val copyNativeFont = tasks.register<Copy>("copyNativeFont") {
-	dependsOn(buildNativeFont)
-	from(nativeLibFile)
-	into(layout.buildDirectory.dir("generated/native-resources/natives/$nativeTag"))
+val buildNativeFont = tasks.register("buildNativeFont") {
+	group = "build"
+	description = "Cross-compiles the native font library for every supported platform when cargo and zig are available."
+	dependsOn(buildNativeTargets)
 }
 
-val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { file(it) } ?: file("prebuilt").takeIf { it.isDirectory }
+val nativeResourcesOverride = providers.gradleProperty("native_resources_dir").orNull?.let { file(it) }
 
 sourceSets.main {
 	if (nativeResourcesOverride != null) {
 		resources.srcDir(nativeResourcesOverride)
 	} else {
-		resources.srcDir(layout.buildDirectory.dir("generated/native-resources"))
+		resources.srcDir(nativeResourcesDir)
 	}
 }
 
 if (nativeResourcesOverride == null) {
 	listOf("jar", "sourcesJar").forEach { name ->
-		tasks.matching { it.name == name }.configureEach { dependsOn(copyNativeFont) }
+		tasks.matching { it.name == name }.configureEach { dependsOn(buildNativeFont) }
 	}
 }
 
 tasks.processResources {
 	if (nativeResourcesOverride == null) {
-		dependsOn(copyNativeFont)
+		dependsOn(buildNativeFont)
 	}
+
 	val expansionProps = mapOf(
 		"modId" to modId,
 		"modName" to modName,
