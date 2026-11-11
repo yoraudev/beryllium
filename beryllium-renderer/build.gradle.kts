@@ -39,7 +39,7 @@ tasks.named("compileKotlin") {
 
 tasks.processResources {
 	if (nativeResourcesOverride == null) {
-		dependsOn(":copyNativeFont")
+		dependsOn(":buildNativeFont")
 	}
 	from(rootProject.file("src/main/resources")) {
 		exclude("fabric.mod.json")
