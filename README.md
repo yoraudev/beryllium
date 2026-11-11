@@ -300,7 +300,7 @@ Custom pipelines from `RenderPipelines` join the same batching path. `Renderer2D
 
 Textures are created with `Texture2D.create(label, width, height)`. Colors are ARGB integers; `Colors` provides `rgb`, `rgba`, `withAlpha`, `multiplyAlpha`, `lerp`, and `hex`.
 
-Text is rasterized by the Rust native library as MSDF at a 64 px em with a 2 px range. Local builds bundle the native library for the build platform and compile it automatically when `cargo` is available; releases bundle the Windows, Linux and both macOS builds. If the native library is missing, text rendering is disabled with an error log; there is intentionally no software fallback.
+Text is rasterized by the Rust native library as MSDF at a 64 px em with a 2 px range. Local builds bundle the native library for the build platform and compile it automatically when `cargo` is available; a `prebuilt/` directory in the release layout is used instead when present, and releases bundle the Windows, Linux and both macOS builds. If the native library is missing, text rendering is disabled with an error log; there is intentionally no software fallback.
 
 ## UI model
 
