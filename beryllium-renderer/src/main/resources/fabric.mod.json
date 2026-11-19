@@ -5,7 +5,7 @@
 	"name": "${modName}",
 	"description": "Renderer-only build of Beryllium: 2D/3D drawing, MSDF text, SVG, textures, pipelines, and events without the UI framework.",
 	"authors": [
-		"Me!"
+		"Trauma Development"
 	],
 	"contact": {
 	},
